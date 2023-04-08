@@ -6,7 +6,7 @@
 # @Author：hz157
 # @DateTime: 10/1/2023 下午9:55
 from Database.Mysql import Mysql
-from Model.models import Task, Article, User, Media, DictConvertORM
+from Model.models import Article, User, Media, DictConvertORM
 from Network.Files import DownloadWeiboVideo, DownloadWeiboImage
 from Network.Sina import *
 from Utils import timeutlis
@@ -32,14 +32,24 @@ def main(keyword, outType):
                 return
             UserInfo = getUserInfo(response)
             ArticleInfo = getArticleInfo(response)
+            Images = getArticleImage(response)
+            Video = getArticleVideo(response)
+            if len(Images) != 0:
+                for image in Images:
+                    imagePath = DownloadWeiboImage(ArticleInfo['id'], image)
+                    if imagePath is not None:
+                        print(f'Images Download Success, path: {imagePath}')
+            # Judge whether there are video  判断是否有视频
+            if Video is not None:
+                videoPath = DownloadWeiboVideo(ArticleInfo['id'], Video)
+                if videoPath is not None:
+                    print(f'Video Download Success, path: {videoPath}')
             try:
                 ArticleInfo['spider_keyword'] = keyword
                 ArticleInfo['server_name'] = config.server_name
                 ArticleInfo['clean_text'] = CleanData(ArticleInfo['text'])
             except Exception as e:
                 logutils.error(e)
-            Images = getArticleImage(response)
-            Video = getArticleVideo(response)
             if outType == 'datebase':
                 database(UserInfo, ArticleInfo, Images, Video)
             else:
@@ -61,17 +71,6 @@ def database(userInfo, articleInfo, imagesInfo, videoInfo):
                 session.add(user)
             session.add(article)
             # Judge whether there are pictures  判断是否有图片
-            if len(imagesInfo) != 0:
-                for image in imagesInfo:
-                    downloadInfo = DownloadWeiboImage(image)
-                    media = Media(article=articleInfo['id'], path=downloadInfo[1], type="image", size=downloadInfo[0],
-                                  original=config.Sina_OrgImage_Url + image + ".jpg")
-                    session.add(media)
-            # Judge whether there are video  判断是否有视频
-            if videoInfo is not None:
-                downloadInfo =  DownloadWeiboVideo(videoInfo)
-                media = Media(article=articleInfo['id'], path=downloadInfo[1], type="video", size=downloadInfo[0], original=videoInfo)
-                session.add(media)
         except Exception as e:
             logutils.error(e)
     session.commit()
@@ -89,8 +88,8 @@ def cli(userInfo, articleInfo, imagesInfo, videoInfo):
     videoInfo:
     {videoInfo}
     """)
-    a = input('Press any key to go to the next one')
+    # a = input('Press any key to go to the next one')
 
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
