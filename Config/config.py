@@ -18,9 +18,9 @@ Logger_root_path = "logs"
 # 可变配置文件路径
 config_file_path = "Config/config.ini"
 # 视频文件保存路径
-video_root_path = "static/video"
-# 图片文件保存路径
-images_root_path = "static/images"
+media_path = "static/mdeia"
+# # 图片文件保存路径
+# images_root_path = "static/images"
 
 
 def writeConfig(section: str, option: str, data: str):
@@ -118,9 +118,9 @@ Sina_Mobile_Header = {
 }
 
 Sina_Image_Header = {
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/110.0',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
+        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
         'Accept-Encoding': 'gzip, deflate, br',
         'Connection': 'keep-alive',
         'Upgrade-Insecure-Requests': '1',
@@ -128,6 +128,5 @@ Sina_Image_Header = {
         'Sec-Fetch-Mode': 'navigate',
         'Sec-Fetch-Site': 'none',
         'Sec-Fetch-User': '?1',
-        'X-Forwarded-For': '127.0.0.1',
-        'X-Forwarded-For': 'localhost'
+        'X-Forwarded-For': 'm.weibo.cn'
 }
